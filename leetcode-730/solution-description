@@ -1,0 +1,51 @@
+This is a typical Dynamic Programming (DP) problem. 
+
+Recognizing a Dynamic Programming problem is often the most difficult step in solving it. Can the problem solution be expressed as a function of solutions to similar smaller problems?
+
+In this particular case, assume that you have a string of length N, and you know number of palindromic subsequences you have for smaller lengths less than N, how can this solution be reused?
+
+Case 1: First and last charaters are not matching
+---------------------------------------------------
+Consider String abcd.
+
+Number of palindromes for string abc - ('a','b','c')
+and number of palindromes for string bcd are - ('b','c','d')
+
+Total palindromes can be counted as = Palindromes("abc") + Palindromes("bcd") - Palindromes("bc") // since "bc" will be counted both in "abc" and "bcd"
+
+So, formula goes this way: S[0:j] = S[0:j-1] + S[1:j] - S[1:j-1];
+
+Case 2: First and last characters are same:
+--------------------------------------------
+Consider String abcda
+
+String length is 5 and we assume that all the sub-problems of length less than 5 are solved.
+Here first and last characters are same.
+
+Number of palindromes in S[1:4] = 3 ('b','c','d')
+Since first and last characters are same, we can append these characters to every palindrome in the above range which results in ('aba','aca','ada')
+Also we will have two more palindromes ('a','aa')
+
+So, formula goes this way: S[0:j] = 2*S[1:j-1] + 2;
+
+What if, the character has already occured in the range S[1:j-1]?
+
+Case 2.a: Character has repeated once in the ranged S[1:j-1]
+---------
+Consider string abaca
+
+Number of palindromes in S[1:4] = 3 ('b','a','c')
+Since first and last characters are same, we can append these characters to every palindrome in the above range which results in ('aba','aaa','aca')
+Also we will have two more palindromes ('a','aa'). But 'a' is already counted as a palindrome in the range S[1:4]. So this should not be counted twice
+
+So, formula goes this way: S[0:j] = 2*S[1:j-1] + 1;
+
+What if, the character has already occured multiple times in the range S[1:j-1]?
+
+Case 2.b: Character has repeated multiple-times in the ranged S[1:j-1]
+----------
+Consider string abacaa
+
+We just need to find first occurence and last occurence of the character in the range S[1:j-1] and should not consider them as they will be repetitive
+
+So, formula goes this way: S[0:j] = 2*S[1:j-1] - S[fast+1:last-1]
